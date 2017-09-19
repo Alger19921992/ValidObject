@@ -42,21 +42,23 @@
         if ([self isNullOrEmpty:obj]) {
             return CommonNullStr;
         }
-    } else
-        if([type isEqualToString:@"@\"NSArray\""] || [type isEqualToString:@"@\"NSMutableArray\""]){
-            if (obj) {
-                NSMutableArray *arr = [NSMutableArray arrayWithArray: obj];
-                for(int i = 0; i < arr.count; i++){
-                    id object = [arr objectAtIndex:i];
-                    if ([object isKindOfClass:[ValidBaseObject class]]) {
-                        id o = [object valid];
-                        [arr replaceObjectAtIndex:i withObject:o];
-                    }
+    } else if([type isEqualToString:@"@\"NSArray\""] || [type isEqualToString:@"@\"NSMutableArray\""]){
+        if (obj) {
+            NSMutableArray *arr = [NSMutableArray arrayWithArray: obj];
+            for(int i = 0; i < arr.count; i++){
+                id object = [arr objectAtIndex:i];
+                if ([object isKindOfClass:[ValidBaseObject class]]) {
+                    id validObj = [object valid];
+                    [arr replaceObjectAtIndex:i withObject:validObj];
                 }
-                return arr;
             }
-            return [NSArray array];
+            return arr;
         }
+        return [NSArray array];
+    } else if ([obj isKindOfClass:[ValidBaseObject class]]) {
+        id validObj = [obj valid];
+        return validObj;
+    }
     return obj;
 }
 
